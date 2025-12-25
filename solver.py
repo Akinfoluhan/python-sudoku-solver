@@ -1,3 +1,8 @@
+# A simple Sudoku solver using backtracking algorithm
+
+# import time for performance measurement (optional)
+import time
+
 # first, we define a function to validate the rules of the game
 def is_valid(board, num, pos):
 
@@ -36,7 +41,7 @@ def find_empty(board):
     return None
 
 # next, we define the main solving function using backtracking
-def solve_sudoku(board):
+def solve_sudoku(board, visualize=False, delay=0.1):
     # first, we find an empty cell
     empty = find_empty(board)
 
@@ -54,12 +59,24 @@ def solve_sudoku(board):
             # place the number in the cell
             board[row][col] = num
 
+            # if visualize is true, we can add a delay and print the board (optional)
+            if visualize:
+                print(f"\nPlacing {num} at position ({row}, {col})")
+                print_board(board)
+                time.sleep(delay)
+
             # recursively try to solve the rest of the board
-            if solve_sudoku(board):
+            if solve_sudoku(board, visualize=visualize, delay=delay):
                 return True
 
             # if it doesn't lead to a solution, backtrack
             board[row][col] = 0  # Backtrack
+
+            # also visualize the backtracking step if needed
+            if visualize:
+                print(f"\nBacktracking at position ({row}, {col})")
+                print_board(board)
+                time.sleep(delay)
 
     # if no number works, return False
     return False
@@ -99,5 +116,5 @@ if __name__ == "__main__":
     print(find_empty(test_board)) # (0,2)
     print(solve_sudoku(test_board)) # True
 
-    solved_board = solve_sudoku(test_board)
+    solved_board = solve_sudoku(test_board, visualize=True, delay=0.05)
     print_board(test_board)
