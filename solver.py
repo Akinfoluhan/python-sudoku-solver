@@ -3,6 +3,9 @@
 # import time for performance measurement (optional)
 import time
 
+# import numpy for board representation (optional)
+import numpy as np
+
 # first, we define a function to validate the rules of the game
 def is_valid(board, num, pos):
 
@@ -10,12 +13,12 @@ def is_valid(board, num, pos):
     row, col = pos
 
     # check if the number is in the current row
-    if num in board[row]:
+    if num in board[row, :]:
         return False
     
     # check if the number is in the current column
     for i in range(len(board)):
-        if board[i][col] == num:
+        if board[i, col] == num:
             return False
         
     # check if the number is in the current 3x3 box
@@ -26,7 +29,7 @@ def is_valid(board, num, pos):
     # iterate through the 3x3 box
     for i in range(box_row_start, box_row_start + 3):
         for j in range(box_col_start, box_col_start + 3):
-            if board[i][j] == num:
+            if board[i, j] == num:
                 return False
             
     # if the number is not found in the row, column, or box, it is valid
@@ -36,21 +39,21 @@ def is_valid(board, num, pos):
 def is_board_valid(board):
     for row in range(len(board)):
         for col in range(len(board[0])):
-            num = board[row][col]
+            num = board[row, col]
             if num != 0:
-                # temporarily remove the number to check validity
-                board[row][col] = 0
+                # temporarily remove the number to check validity - duplicate check
+                board[row, col] = 0
                 if not is_valid(board, num, (row, col)):
                     return False
                 # restore the number
-                board[row][col] = num
+                board[row, col] = num
     return True
 
 # next, we define a function to find an empty cell in the board
 def find_empty(board):
     for row in range(len(board)):
         for col in range(len(board[0])):
-            if board[row][col] == 0:
+            if board[row, col] == 0:
                 return (row, col) # it returns the cell's position as a tuple (row, col)
     return None
 
@@ -71,7 +74,7 @@ def solve_sudoku(board, visualize=False, delay=0.01):
         # check if the number is valid in the current position
         if is_valid(board, num, (row, col)):
             # place the number in the cell
-            board[row][col] = num
+            board[row, col] = num
 
             # if visualize is true, we can add a delay and print the board (optional)
             if visualize:
@@ -84,7 +87,7 @@ def solve_sudoku(board, visualize=False, delay=0.01):
                 return True
 
             # if it doesn't lead to a solution, backtrack
-            board[row][col] = 0  # Backtrack
+            board[row, col] = 0  # Backtrack
 
             # also visualize the backtracking step if needed
             if visualize:
@@ -106,13 +109,13 @@ def print_board(board):
             if col % 3 == 0 and col != 0:
                 print("| ", end="")
 
-            print(board[row][col], end=" ")
+            print(board[row, col], end=" ")
         
         print()  # new line after each row
 
 # sanity check
 if __name__ == "__main__":
-    test_board = [
+    board = [
         [5, 3, 0, 0, 7, 0, 0, 0, 0],
         [6, 0, 0, 1, 9, 5, 0, 0, 0],
         [0, 9, 8, 0, 0, 0, 0, 6, 0],
@@ -124,6 +127,8 @@ if __name__ == "__main__":
         [0, 0, 0, 0, 8, 0, 0, 7, 9]
     ]
 
+    test_board = np.array(board, dtype=int)
+
     # print(is_valid(test_board, 5, (0,2))) # False
     # print(is_valid(test_board, 4, (0,2))) # True
 
@@ -133,10 +138,13 @@ if __name__ == "__main__":
     # solved_board = solve_sudoku(test_board, visualize=True, delay=0.05)
     # print_board(test_board)
 
+    print("\nInitial Sudoku Board:\n")
+    print_board(test_board)
+
     if not is_board_valid(test_board):
         print("The initial board is invalid.")
     else:
-        if solve_sudoku(test_board, visualize=True, delay=0.05):
+        if solve_sudoku(test_board, visualize=False, delay=0.05):
             print("\nSolved Sudoku Board:\n")
             print_board(test_board)
         else:
