@@ -28,7 +28,7 @@ A command-line Sudoku solver built in Python that solves standard 9×9 puzzles u
 ### 1) Clone the repository
 
 ```bash
-git clone <YOUR_REPO_URL>
+git clone https://github.com/Akinfoluhan/python-sudoku-solver.git
 cd python-sudoku-solver
 ```
 
