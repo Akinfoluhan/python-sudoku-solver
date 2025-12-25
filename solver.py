@@ -14,7 +14,7 @@ def is_valid(board, num, pos):
             return False
         
     # check if the number is in the current 3x3 box
-    # get starting position of the 3x3 box
+    # get starting position of the 3x3 box - determine whole largest multiple of 3 less than or equal to row and col
     box_row_start = (row // 3) * 3
     box_col_start = (col // 3) * 3
 
@@ -26,6 +26,15 @@ def is_valid(board, num, pos):
             
     # if the number is not found in the row, column, or box, it is valid
     return True
+
+# next, we define a function to find an empty cell in the board
+def find_empty(board):
+    for row in range(len(board)):
+        for col in range(len(board[0])):
+            if board[row][col] == 0:
+                return (row, col) # it returns the cell's position as a tuple (row, col)
+    return None
+
 
 # sanity check
 if __name__ == "__main__":
@@ -43,3 +52,5 @@ if __name__ == "__main__":
 
     print(is_valid(test_board, 5, (0,2))) # False
     print(is_valid(test_board, 4, (0,2))) # True
+
+    print(find_empty(test_board)) # (0,2)
