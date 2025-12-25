@@ -6,6 +6,9 @@ import time
 # import numpy for board representation (optional)
 import numpy as np
 
+# import argparse for command line arguments (optional)
+import argparse
+
 # first, we define a function to validate the rules of the game
 def is_valid(board, num, pos):
 
@@ -137,6 +140,15 @@ def print_board(board):
 
 # sanity check
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Sudoku Solver")
+    parser.add_argument("--visualize", action="store_true", help="Visualize the solving process")
+    parser.add_argument("--delay", type=float, default=0.01, help="Delay between visualization steps in seconds")
+    parser.add_argument("--time", dest="show_time", action="store_true", help="Measure and display the time taken to solve the Sudoku")
+    parser.add_argument("--no-time", dest="show_time", action="store_false", help="Do not measure time taken to solve the Sudoku")
+    parser.set_defaults(show_time=True)
+
+    args = parser.parse_args()
+
     board = [
         [5, 3, 0, 0, 7, 0, 0, 0, 0],
         [6, 0, 0, 1, 9, 5, 0, 0, 0],
@@ -169,7 +181,7 @@ if __name__ == "__main__":
         # start timer for performance measurement (optional)
         start_time = time.perf_counter()
 
-        solved_board = solve_sudoku(test_board, visualize=False)
+        solved_board = solve_sudoku(test_board, visualize=args.visualize, delay=args.delay)
 
         # end timer after solving
         end_time = time.perf_counter()
@@ -182,5 +194,6 @@ if __name__ == "__main__":
             print_board(test_board)
         else:
             print("\nNo solution exists for this board.")
-        
-        print(f"\nSolved in {elapsed_time:.2f} ms")
+
+        if args.show_time:
+            print(f"\nSolved in {elapsed_time:.2f} ms")
