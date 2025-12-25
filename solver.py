@@ -32,6 +32,20 @@ def is_valid(board, num, pos):
     # if the number is not found in the row, column, or box, it is valid
     return True
 
+# optional: check if initial board is valid
+def is_board_valid(board):
+    for row in range(len(board)):
+        for col in range(len(board[0])):
+            num = board[row][col]
+            if num != 0:
+                # temporarily remove the number to check validity
+                board[row][col] = 0
+                if not is_valid(board, num, (row, col)):
+                    return False
+                # restore the number
+                board[row][col] = num
+    return True
+
 # next, we define a function to find an empty cell in the board
 def find_empty(board):
     for row in range(len(board)):
@@ -41,7 +55,7 @@ def find_empty(board):
     return None
 
 # next, we define the main solving function using backtracking
-def solve_sudoku(board, visualize=False, delay=0.1):
+def solve_sudoku(board, visualize=False, delay=0.01):
     # first, we find an empty cell
     empty = find_empty(board)
 
@@ -107,14 +121,23 @@ if __name__ == "__main__":
         [7, 0, 0, 0, 2, 0, 0, 0, 6],
         [0, 6, 0, 0, 0, 0, 2, 8, 0],
         [0, 0, 0, 4, 1, 9, 0, 0, 5],
-        [0, 0, 0, 0, 8, 0, 0, 9, 9]
+        [0, 0, 0, 0, 8, 0, 0, 7, 9]
     ]
 
-    print(is_valid(test_board, 5, (0,2))) # False
-    print(is_valid(test_board, 4, (0,2))) # True
+    # print(is_valid(test_board, 5, (0,2))) # False
+    # print(is_valid(test_board, 4, (0,2))) # True
 
-    print(find_empty(test_board)) # (0,2)
-    print(solve_sudoku(test_board)) # True
+    # print(find_empty(test_board)) # (0,2)
+    # print(solve_sudoku(test_board)) # True
 
-    solved_board = solve_sudoku(test_board, visualize=True, delay=0.05)
-    print_board(test_board)
+    # solved_board = solve_sudoku(test_board, visualize=True, delay=0.05)
+    # print_board(test_board)
+
+    if not is_board_valid(test_board):
+        print("The initial board is invalid.")
+    else:
+        if solve_sudoku(test_board, visualize=True, delay=0.05):
+            print("\nSolved Sudoku Board:\n")
+            print_board(test_board)
+        else:
+            print("\nNo solution exists for this board.")
