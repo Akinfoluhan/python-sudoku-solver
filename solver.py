@@ -35,6 +35,49 @@ def find_empty(board):
                 return (row, col) # it returns the cell's position as a tuple (row, col)
     return None
 
+# next, we define the main solving function using backtracking
+def solve_sudoku(board):
+    # first, we find an empty cell
+    empty = find_empty(board)
+
+    # if there are no empty cells, the board is solved
+    if not empty:
+        return True  # Solved
+    
+    # get the row and column of the empty cell
+    row, col = empty
+
+    # try numbers 1-9 in the empty cell
+    for num in range(1, 10):
+        # check if the number is valid in the current position
+        if is_valid(board, num, (row, col)):
+            # place the number in the cell
+            board[row][col] = num
+
+            # recursively try to solve the rest of the board
+            if solve_sudoku(board):
+                return True
+
+            # if it doesn't lead to a solution, backtrack
+            board[row][col] = 0  # Backtrack
+
+    # if no number works, return False
+    return False
+
+# finally, we create a function to print the board
+def print_board(board):
+    # print the board in a readable format
+    for row in range(len(board)):
+        if row % 3 == 0 and row != 0:
+            print("-" * 21)
+
+        for col in range(len(board[0])):
+            if col % 3 == 0 and col != 0:
+                print("| ", end="")
+
+            print(board[row][col], end=" ")
+        
+        print()  # new line after each row
 
 # sanity check
 if __name__ == "__main__":
@@ -47,10 +90,14 @@ if __name__ == "__main__":
         [7, 0, 0, 0, 2, 0, 0, 0, 6],
         [0, 6, 0, 0, 0, 0, 2, 8, 0],
         [0, 0, 0, 4, 1, 9, 0, 0, 5],
-        [0, 0, 0, 0, 8, 0, 7, 9, 9]
+        [0, 0, 0, 0, 8, 0, 0, 9, 9]
     ]
 
     print(is_valid(test_board, 5, (0,2))) # False
     print(is_valid(test_board, 4, (0,2))) # True
 
     print(find_empty(test_board)) # (0,2)
+    print(solve_sudoku(test_board)) # True
+
+    solved_board = solve_sudoku(test_board)
+    print_board(test_board)
