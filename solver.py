@@ -57,7 +57,7 @@ def find_empty(board):
                 return (row, col) # it returns the cell's position as a tuple (row, col)
     return None
 
-# we can find empty cells with least possible candidates to optimize (optional)
+# we can find empty cells with least possible candidates to optimize - MRV (Minimum Remaining Values) (optional)
 def find_empty_optimized(board):
     min_candidates = 10  # more than the maximum possible candidates (1-9)
     best_pos = None
@@ -160,14 +160,27 @@ if __name__ == "__main__":
     # solved_board = solve_sudoku(test_board, visualize=True, delay=0.05)
     # print_board(test_board)
 
-    print("\nInitial Sudoku Board:\n")
+    print("\nInitial Sudoku Board:")
     print_board(test_board)
 
     if not is_board_valid(test_board):
         print("The initial board is invalid.")
     else:
-        if solve_sudoku(test_board, visualize=False, delay=0.05):
-            print("\nSolved Sudoku Board:\n")
+        # start timer for performance measurement (optional)
+        start_time = time.perf_counter()
+
+        solved_board = solve_sudoku(test_board, visualize=False)
+
+        # end timer after solving
+        end_time = time.perf_counter()
+
+        # convert to milliseconds
+        elapsed_time = (end_time - start_time) * 1000
+
+        if solved_board:
+            print("\nSolved Sudoku Board:")
             print_board(test_board)
         else:
             print("\nNo solution exists for this board.")
+        
+        print(f"\nSolved in {elapsed_time:.2f} ms")
