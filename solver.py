@@ -57,10 +57,32 @@ def find_empty(board):
                 return (row, col) # it returns the cell's position as a tuple (row, col)
     return None
 
+# we can find empty cells with least possible candidates to optimize (optional)
+def find_empty_optimized(board):
+    min_candidates = 10  # more than the maximum possible candidates (1-9)
+    best_pos = None
+
+    for row in range(len(board)):
+        for col in range(len(board[0])):
+            if board[row, col] == 0:
+                candidates = 0
+                for num in range(1, 10):
+                    if is_valid(board, num, (row, col)):
+                        candidates += 1
+
+                # if there are no candidates, return immediately
+                if candidates == 0:
+                    return (row, col)
+                if candidates < min_candidates:
+                    min_candidates = candidates
+                    best_pos = (row, col)
+
+    return best_pos
+
 # next, we define the main solving function using backtracking
 def solve_sudoku(board, visualize=False, delay=0.01):
     # first, we find an empty cell
-    empty = find_empty(board)
+    empty = find_empty_optimized(board)
 
     # if there are no empty cells, the board is solved
     if not empty:
