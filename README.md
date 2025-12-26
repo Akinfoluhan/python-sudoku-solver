@@ -71,7 +71,7 @@ python solver.py --no-time
 ## Command-Line Options
 
 - `--visualize` : prints each placement and backtrack step
-- `--delay <float>` : delay between visualization steps (default: `0.03`)
+- `--delay <float>` : delay between visualization steps (default: `0.01`)
 - `--time` / `--no-time` : enable/disable timing output (default: timing on)
 
 ---
